@@ -1,0 +1,26 @@
+---
+- name: Apache wget installation for webservers
+  hosts: webservers
+  tasks:
+    - name: Installing httpd and wget
+      yum:
+        pkg: ["httpd", "wget"]
+        state: present
+
+    - name: Send html doc
+      copy:
+        content: "<h1>Hello Ansible</h1>"
+        dest: /var/www/html/index.html
+        mode: 0744
+
+    - name: Restart apache2
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+
+    - name: Add a new user
+      ansible.builtin.user:
+        name: guestuser
+        # uid: 1041
+        state: present
