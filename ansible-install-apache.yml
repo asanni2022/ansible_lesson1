@@ -1,0 +1,36 @@
+---
+- name: install apache on ubuntu
+  hosts: ubuntu
+  tasks:
+   - name: install apache
+     ansible.builtin.apt:
+      pkg: [ 'apache2' , 'wget']
+      state: present
+
+   - name: create index.html
+     ansible.builtin.copy:
+       content: "<h1>Hello Ansible from Akim"
+       dest: /var/www/index.html
+       mode: preserve
+
+   - name: restart apache
+     ansible.builtin.service:
+        name: 'apache2'
+        state: restarted
+        enabled: true
+
+
+- name: install apache on ec2 server
+  hosts: webservers
+  tasks:
+   - name: install apache
+     ansible.builtin.yum:
+      pkg: [ 'httpd' , 'wget']
+      state: present
+- name: remove wiget and 'httpd'
+  hosts: webservers
+  tasks:
+     - name: remove yum
+       ansible.builtin.yum:
+        pkg: ['httpd', 'wget']
+        state: absent
